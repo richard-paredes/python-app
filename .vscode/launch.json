@@ -14,6 +14,26 @@
                 "app.main:app",
                 "--reload"
             ]
-        }
+        },
+        {
+            "name": "Docker: Debug Backend",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "python": {
+              "pathMappings": [
+                {
+                  "localRoot": "${workspaceFolder}/backend",
+                  "remoteRoot": "/app"
+                }
+              ],
+              "projectType": "fastapi"
+            },
+            "dockerServerReadyAction": {
+              "action": "openExternally",
+              "pattern": "Uvicorn running on (https?://\\S+|[0-9]+)",
+              "uriFormat": "%s://localhost:%s/api/v1/openapi.json"
+            }
+          }
     ]
 }
