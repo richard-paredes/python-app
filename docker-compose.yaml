@@ -1,16 +1,35 @@
 services:
+  spicedb:
+    image: postgres:12
+    restart: always
+
+    volumes:
+      - spicedb:/var/lib/postgresql/data/pgdata
+
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
+
   backend:
     restart: always
-    # depends_on:
-    #   - todo-db
-    
+    depends_on:
+      - spicedb
+
     build:
       context: ./backend
       args:
         INSTALL_DEV: ${INSTALL_DEV-false}
-      
+
     env_file:
       - .env
     environment:
       - DOMAIN=${DOMAIN}
       - ENVIRONMENT=${ENVIRONMENT}
+
+volumes:
+  spicedb:
