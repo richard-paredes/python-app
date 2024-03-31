@@ -2,7 +2,7 @@ from typing import List
 from http import HTTPStatus
 from fastapi import APIRouter, HTTPException
 
-from backend.app.models import Person, PersonBase
+from app.models import Person, PersonBase
 
 router = APIRouter()
 
