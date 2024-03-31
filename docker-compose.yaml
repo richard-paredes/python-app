@@ -1,0 +1,16 @@
+services:
+  backend:
+    restart: always
+    # depends_on:
+    #   - todo-db
+    
+    build:
+      context: ./backend
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-false}
+      
+    env_file:
+      - .env
+    environment:
+      - DOMAIN=${DOMAIN}
+      - ENVIRONMENT=${ENVIRONMENT}
