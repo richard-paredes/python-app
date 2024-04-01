@@ -13,6 +13,7 @@ DB: List[Person] = [
 
 @router.get("/")
 def read_items():
+    print("Hello world!!!")
     return DB
 
 @router.get("/{item_id}", status_code=HTTPStatus.OK)
@@ -22,7 +23,6 @@ def read_item(item_id: int):
         if len(matched) == 0:
             return None
         return matched[0]
-    
     item = search(item_id)
     if not item: raise HTTPException(HTTPStatus.NOT_FOUND, detail="Item not found")
     return item

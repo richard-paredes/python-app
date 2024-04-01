@@ -4,13 +4,42 @@
     {
       "type": "docker-run",
       "label": "docker-run: debug",
-      "dependsOn": ["docker-build"],
+      "dependsOn": ["docker-compose: up"],
       "options": {
         "cwd": "${workspaceFolder}/backend"
       },
-      "python": {
-        "module": "uvicorn",
-        "args": ["app.main:app", "--reload"]
+
+      // "python": {
+      //   "module": "uvicorn",
+      //   "args": ["app.main:app", "--host 0.0.0.0", "--port 8000", "--reload"]
+      // },
+      "dockerRun": {
+        "image": "spice-api:latest",
+        // "command": "uvicorn app.main:app --host 0.0.0.0 --port 8000"
+      }
+    },
+    {
+      "type": "docker-compose",
+      "label": "docker-compose: up",
+      "dockerCompose": {
+        "up": {
+          "detached": true,
+          "build": true
+        },
+        "files": [
+          "${workspaceFolder}/docker-compose.yml"
+        ]
+      }
+    },
+    {
+      "type": "docker-build",
+      "label": "docker-build",
+      "options": {
+        "cwd": "${workspaceFolder}/backend"
+      },
+      "dockerBuild": {
+        "tag": "spice-api:latest",
+        "context": ".",
       }
     }
   ]

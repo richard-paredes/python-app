@@ -16,24 +16,21 @@
             ]
         },
         {
-            "name": "Docker: Debug Backend",
-            "type": "docker",
-            "request": "launch",
-            "preLaunchTask": "docker-run: debug",
-            "python": {
-              "pathMappings": [
-                {
-                  "localRoot": "${workspaceFolder}/backend",
-                  "remoteRoot": "/app"
-                }
-              ],
-              "projectType": "fastapi"
+            "name": "Docker-Compose: Debug Backend",
+            "type": "debugpy",
+            "request": "attach",
+            "preLaunchTask": "docker-compose: up",
+            "connect": {
+              "port": 5678,
+              "host": "localhost"
             },
-            "dockerServerReadyAction": {
-              "action": "openExternally",
-              "pattern": "Uvicorn running on (https?://\\S+|[0-9]+)",
-              "uriFormat": "%s://localhost:%s/api/v1/openapi.json"
-            }
-          }
+            "pathMappings": [
+              {
+                "localRoot": "${workspaceFolder}/backend",
+                "remoteRoot": "/app"
+              }
+            ],
+            "justMyCode": true
+        }
     ]
 }

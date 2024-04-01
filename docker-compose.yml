@@ -1,34 +1,61 @@
 services:
-  spicedb:
-    image: postgres:12
-    restart: always
+  # spicedb:
+  #   image: postgres:12
+  #   restart: always
 
-    volumes:
-      - spicedb:/var/lib/postgresql/data/pgdata
+  #   volumes:
+  #     - spicedb:/var/lib/postgresql/data/pgdata
 
-    env_file:
-      - .env
-    environment:
-      - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
-      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
-      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - PGDATA=/var/lib/postgresql/data/pgdata
+  #     - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+  #     - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+  #     - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
   backend:
-    image:
+    image: spice-api:latest
+
     restart: always
-    depends_on:
-      - spicedb
+
+    # volumes:
+    #   - spiceapi:/app
+
+    # depends_on:
+    #   - spicedb
 
     build:
       context: ./backend
 
+    volumes:
+      - ./backend:/app
+
     env_file:
       - .env
+
     environment:
       - DOMAIN=${DOMAIN}
       - ENVIRONMENT=${ENVIRONMENT}
 
+    # command:
+    #   [
+    #     "sh",
+    #     "-c",
+    #     "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m app.main"
+    #   ]
+
+    ports:
+      - 5678:5678
+      - 8000:8000
+
 volumes:
   spicedb:
+
+  backend:
+    # spiceapi:
+    #   driver_opts:
+    #     type: bind
+    #     source: ${pwd}
+    #     target: /app

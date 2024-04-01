@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = secrets.token_urlsafe(32)
     DOMAIN: str = "localhost"
     ENVIRONMENT: Literal["local","staging","production"] = "local"
-    PROJECT_NAME: str
+    PROJECT_NAME: str = "SPICE-TESTING"
     BACKEND_CORS_ORIGINS: Annotated[List[AnyUrl] | str, BeforeValidator(parse_cors)] = []
 
     # POSTGRES_SERVER: str
