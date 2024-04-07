@@ -20,18 +20,17 @@
       "name": "Docker-Compose: Debug Backend",
       "type": "debugpy",
       "request": "attach",
-      "preLaunchTask": "docker-compose: up",
+      // "preLaunchTask": "docker-compose: up", // Need to run this one manually.
       "connect": {
-        "port": 5678,
-        "host": "localhost"
+        "host": "localhost",
+        "port": 5678
       },
       "pathMappings": [
         {
           "localRoot": "${workspaceFolder}/backend",
           "remoteRoot": "/app"
         }
-      ],
-      "justMyCode": true
+      ]
     }
   ]
 }

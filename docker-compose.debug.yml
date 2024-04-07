@@ -1,16 +1,39 @@
 services:
+  spicedb:
+    image: postgres:12 # Use PostgreSQL version 14
+    restart: "no"
 
-  backend:
+    ports:
+      - "5432:5432" # Map port 5432 on the host to port 5432 in the container
 
-    extends:
-      file: docker-compose.yml
-      service: backend
+    env_file:
+      - .env.local
+    # environment:
+    #   POSTGRES_DB: mydatabase # Set the default database name
+    #   POSTGRES_USER: myuser # Set the default database user
+    #   POSTGRES_PASSWORD: mypassword # Set the password for the database user
+    volumes:
+      - spicedb:/var/lib/postgresql/data # Persist database data
+
+  spiceapi:
+    image: spice-api:latest
+    restart: always
+
+    volumes:
+      - ./backend:/app
+
+    depends_on:
+      - spicedb
+
+    build:
+      context: ./backend
 
     env_file:
       - .env.local
 
-    volumes:
-      - ./backend:/app
+    ports:
+      - 5678:5678
+      - 8000:8000
 
     command:
       [
@@ -18,3 +41,7 @@ services:
         "-c",
         "pip install debugpy -t /tmp && python /tmp/debugpy --listen 0.0.0.0:5678 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
       ]
+
+volumes:
+  spicedb:
+  spiceapi:

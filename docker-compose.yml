@@ -13,9 +13,11 @@ services:
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
-  backend:
-    image: spice-api:latest
+    ports:
+      - 5432:5432
 
+  spicepai:
+    image: spice-api:latest
     restart: always
 
     volumes:
@@ -39,15 +41,8 @@ services:
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
     ports:
-      - 5678:5678
       - 8000:8000
 
 volumes:
   spicedb:
-
-    # backend:
-    # spiceapi:
-    #   driver_opts:
-    #     type: bind
-    #     source: ${pwd}
-    #     target: /app
+  spiceapi:
