@@ -1,8 +1,10 @@
 from typing import List
 from http import HTTPStatus
 from fastapi import APIRouter, HTTPException
+from sqlmodel import select
 
-from app.models import Person, PersonBase
+from app.models import Person, PersonCreate
+from app.api.deps import SessionDep
 
 router = APIRouter()
 
@@ -12,23 +14,22 @@ DB: List[Person] = [
 ]
 
 @router.get("/")
-def read_items():
-    print("Hello world!!!")
-    return DB
+def read_items(session: SessionDep):
+    people = session.exec(select(Person)).all()
+    return people
 
 @router.get("/{item_id}", status_code=HTTPStatus.OK)
-def read_item(item_id: int):
+def read_item(item_id: int, session: SessionDep):
     def search(id: int):
-        matched = [i for i in DB if i.id == id]
-        if len(matched) == 0:
-            return None
-        return matched[0]
+        person = session.exec(select(Person).where(Person.id == id)).first()
+        return person
+    
     item = search(item_id)
-    if not item: raise HTTPException(HTTPStatus.NOT_FOUND, detail="Item not found")
+    if not item: raise HTTPException(HTTPStatus.NOT_FOUND, detail="Person not found")
     return item
 
 @router.post("/", status_code=HTTPStatus.CREATED)
-def create_item(item_create: PersonBase):
+def create_item(item_create: PersonCreate):
     new_person = Person.model_validate(item_create, update={"id":len(DB)})
     DB.append(new_person)
     return new_person

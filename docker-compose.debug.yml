@@ -8,16 +8,13 @@ services:
 
     env_file:
       - .env.local
-    # environment:
-    #   POSTGRES_DB: mydatabase # Set the default database name
-    #   POSTGRES_USER: myuser # Set the default database user
-    #   POSTGRES_PASSWORD: mypassword # Set the password for the database user
+
     volumes:
       - spicedb:/var/lib/postgresql/data # Persist database data
 
   spiceapi:
     image: spice-api:latest
-    restart: always
+    restart: "no"
 
     volumes:
       - ./backend:/app
@@ -35,13 +32,14 @@ services:
       - 5678:5678
       - 8000:8000
 
-    command:
-      [
-        "sh",
-        "-c",
-        "pip install debugpy -t /tmp && python /tmp/debugpy --listen 0.0.0.0:5678 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
-      ]
+    command: >
+      sh -c "sh ./prestart.sh && pip install debugpy -t /tmp && python /tmp/debugpy --listen 0.0.0.0:5678 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
 
 volumes:
   spicedb:
   spiceapi:
+
+
+networks:
+  default:
+    external: false

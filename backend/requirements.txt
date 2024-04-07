@@ -2,4 +2,6 @@ fastapi~=0.109.1
 uvicorn[standard]~=0.24.0.post1
 pydantic-settings~=2.2.1
 sqlmodel~=0.0.16
+psycopg2-binary~=2.9.9
+tenacity~=8.2.3
 debugpy
