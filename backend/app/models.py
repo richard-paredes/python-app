@@ -9,4 +9,3 @@ class Person(PersonBase, table=True):
 
 class PersonOut(PersonBase):
     id: int
-    

@@ -4,18 +4,14 @@
     {
       "type": "docker-run",
       "label": "docker-run: debug",
-      "dependsOn": ["docker-compose: up"],
+      "dependsOn": [
+        "docker-compose: up"
+      ],
       "options": {
         "cwd": "${workspaceFolder}/backend"
       },
-
-      // "python": {
-      //   "module": "uvicorn",
-      //   "args": ["app.main:app", "--host 0.0.0.0", "--port 8000", "--reload"]
-      // },
       "dockerRun": {
         "image": "spice-api:latest",
-        // "command": "uvicorn app.main:app --host 0.0.0.0 --port 8000"
       }
     },
     {
@@ -27,7 +23,7 @@
           "build": true
         },
         "files": [
-          "${workspaceFolder}/docker-compose.yml"
+          "${workspaceFolder}/docker-compose.debug.yml"
         ]
       }
     },

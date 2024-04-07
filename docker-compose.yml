@@ -1,50 +1,42 @@
 services:
-  # spicedb:
-  #   image: postgres:12
-  #   restart: always
+  spicedb:
+    image: postgres:12
+    restart: always
 
-  #   volumes:
-  #     - spicedb:/var/lib/postgresql/data/pgdata
+    volumes:
+      - spicedb:/var/lib/postgresql/data/pgdata
 
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - PGDATA=/var/lib/postgresql/data/pgdata
-  #     - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
-  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
-  #     - POSTGRES_USER=${POSTGRES_USER?Variable not set}
-  #     - POSTGRES_DB=${POSTGRES_DB?Variable not set}
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
   backend:
     image: spice-api:latest
 
     restart: always
 
-    # volumes:
-    #   - spiceapi:/app
+    volumes:
+      - spiceapi:/app
 
-    # depends_on:
-    #   - spicedb
+    depends_on:
+      - spicedb
 
     build:
       context: ./backend
 
-    volumes:
-      - ./backend:/app
-
-    env_file:
-      - .env
-
     environment:
+      - ENV_FILE_PATH=${ENV_FILE_PATH}
       - DOMAIN=${DOMAIN}
       - ENVIRONMENT=${ENVIRONMENT}
-
-    # command:
-    #   [
-    #     "sh",
-    #     "-c",
-    #     "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m app.main"
-    #   ]
+      - PROJECT_NAME=${PROJECT_NAME}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+      - POSTGRES_SERVER=${POSTGRES_SERVER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
     ports:
       - 5678:5678
@@ -53,7 +45,7 @@ services:
 volumes:
   spicedb:
 
-  backend:
+    # backend:
     # spiceapi:
     #   driver_opts:
     #     type: bind
